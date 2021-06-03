@@ -1,4 +1,6 @@
-﻿namespace GitHubMockAPI.Tests
+﻿using Microsoft.FeatureManagement;
+
+namespace GitHubMockAPI.Tests
 {
     using Contracts;
     using Controllers;
@@ -32,8 +34,9 @@
             var usersServiceMock = new Mock<IUsersService>();
             usersServiceMock.Setup(dummy => dummy.FindUsersAsync(It.IsAny<string[]>()))
                 .ReturnsAsync(new List<User>());
+            var featureManagerSnapshotMock = new Mock<IFeatureManagerSnapshot>();
 
-            var controller = new UsersController(loggerMock.Object, usersServiceMock.Object);
+            var controller = new UsersController(loggerMock.Object, usersServiceMock.Object, featureManagerSnapshotMock.Object);
 
             // act
             var result = await controller.RetrieveUsers(usernames?.ToList().ConvertToApiRequest());
@@ -65,8 +68,9 @@
                 {
                     new(){Name = "B", Login = "Login B", Company = "", Followers = 3, PublicRepos = 0}
                 });
+            var featureManagerSnapshotMock = new Mock<IFeatureManagerSnapshot>();
 
-            var controller = new UsersController(loggerMock.Object, usersServiceMock.Object);
+            var controller = new UsersController(loggerMock.Object, usersServiceMock.Object, featureManagerSnapshotMock.Object);
 
             // act
             var result = await controller.RetrieveUsers(new List<string>{"Login B"}.ConvertToApiRequest());

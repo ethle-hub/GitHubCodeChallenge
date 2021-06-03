@@ -1,3 +1,5 @@
+using GitHubMockAPI.Handlers;
+
 namespace GitHubMockAPI
 {
     using Microsoft.AspNetCore.Builder;
@@ -6,6 +8,7 @@ namespace GitHubMockAPI
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.OpenApi.Models;
+    using Microsoft.FeatureManagement;
 
     /// <summary>
     /// Defines the <see cref="Startup" />.
@@ -41,6 +44,9 @@ namespace GitHubMockAPI
 
             // init GitHubMockAPI.Services
             Services.Startup.ConfigureServices(services, Configuration);
+
+            services.AddFeatureManagement()
+                    .UseDisabledFeaturesHandler(new DisabledFeatureHandler()); ;
         }
 
         /// <summary>
