@@ -17,10 +17,11 @@
         /// </summary>
         /// <param name="services">The services<see cref="IServiceCollection"/>.</param>
         /// <param name="configuration">The configuration<see cref="IConfiguration"/>.</param>
-        public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        //public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddGitHubMockAPIServices(this IServiceCollection services, IConfiguration configuration)
         {
             // init GitHubMockAPI.Resources
-            Resources.Startup.ConfigureServices(services, configuration);
+            //services.AddGitHubMockAPIResources(configuration); // see GitHubMockAPI.Startup.cs
 
             // use caching
             services.AddMemoryCache();
@@ -32,6 +33,7 @@
             services.AddSingleton(sp => sp.GetRequiredService<IOptions<UsersFromGitHubServiceOptions>>().Value);
 
             services.AddScoped<IUsersService, UsersFromGitHubService>();
+            return services;
         }
     }
 }
