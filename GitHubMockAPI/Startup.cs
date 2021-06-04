@@ -8,7 +8,8 @@ namespace GitHubMockAPI
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.OpenApi.Models;
-    using Microsoft.FeatureManagement;
+    using GitHubMockAPI.Services;
+    using GitHubMockAPI.Resources;
 
     /// <summary>
     /// Defines the <see cref="Startup" />.
@@ -42,11 +43,9 @@ namespace GitHubMockAPI
             });
             services.AddHttpClient();
 
-            // init GitHubMockAPI.Services
-            Services.Startup.ConfigureServices(services, Configuration);
-
-            services.AddFeatureManagement()
-                    .UseDisabledFeaturesHandler(new DisabledFeatureHandler()); ;
+            // init DI e.g. Resources & Services
+            services.AddGitHubMockAPIResources(Configuration)
+                    .AddGitHubMockAPIServices(Configuration);
         }
 
         /// <summary>
