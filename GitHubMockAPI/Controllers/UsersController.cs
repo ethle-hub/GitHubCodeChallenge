@@ -1,4 +1,8 @@
-﻿namespace GitHubMockAPI.Controllers
+﻿using GitHubMockAPI.Feature;
+using Microsoft.FeatureManagement;
+using Microsoft.FeatureManagement.Mvc;
+
+namespace GitHubMockAPI.Controllers
 {
     using Contracts;
     using Microsoft.AspNetCore.Http;
@@ -29,14 +33,20 @@
         private readonly IUsersService _usersService;
 
         /// <summary>
+        /// 
+        /// </summary>
+        private readonly IFeatureManager _featureManager;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UsersController"/> class.
         /// </summary>
         /// <param name="logger">The logger<see cref="ILogger{UsersController}"/>.</param>
         /// <param name="usersService">.</param>
-        public UsersController(ILogger<UsersController> logger, IUsersService usersService)
+        public UsersController(ILogger<UsersController> logger, IUsersService usersService, IFeatureManagerSnapshot featureManager)
         {
             _logger = logger;
             _usersService = usersService;
+            _featureManager = featureManager;
         }
 
         /// <summary>
@@ -77,6 +87,23 @@
                     ErrorMessage = e.Message
                 };
             }
+        }
+
+        /// <summary>
+        /// This is a test feature enabled.disabled by Feature manager tab of the Azure App Configuration
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(ApiResponse<List<string>>), StatusCodes.Status200OK)]
+        [FeatureGate(MyFeatureFlags.Beta)]
+        public ApiResponse<List<string>> GetBeta()
+        {
+            return new()
+            {
+                IsSuccess = true,
+                Data = new List<string> {"Beta", "feature", "enabled"}
+            };
         }
     }
 }

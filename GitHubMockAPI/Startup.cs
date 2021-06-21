@@ -1,3 +1,5 @@
+using GitHubMockAPI.Handlers;
+
 namespace GitHubMockAPI
 {
     using Microsoft.AspNetCore.Builder;
